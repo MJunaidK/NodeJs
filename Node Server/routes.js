@@ -32,7 +32,7 @@ const requestHandler = (req, res) => {
         return res.end(); */
     
     
-     req.on('end', () => {
+    return req.on('end', () => {
             const parsedBody = Buffer.concat(body).toString();
             console.log("ParsedBody ============>" + parsedBody);
             const message= parsedBody.split('=')[1];
@@ -42,7 +42,7 @@ const requestHandler = (req, res) => {
                 return res.end();
             });
         })
-        
+    }    
     // process.exit();
     res.setHeader('Content-Type', 'text/html');
     res.write('<html>');
@@ -50,7 +50,7 @@ const requestHandler = (req, res) => {
     res.write('<body><h1>Hello from my Node.js server!</h1></body>');
     res.write('<html>');
     res.end();
-    }
+    
 };
 
 //module.exports = requestHandler;
