@@ -17,8 +17,9 @@ app.use((req,res, next) => {
 app.use(bodyParser.urlencoded({extended: false}));
 
 
+app.use('/admin', adminRoutes);
 app.use(shopRoutes);
-app.use(adminRoutes);
+
 /*
 app.use('/',(req,res, next) => {
     console.log('This always run');
