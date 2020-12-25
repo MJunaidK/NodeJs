@@ -7,9 +7,10 @@ const expressHbs= require('express-handlebars');
 
 const app = express();
 
-app.engine('handlebars', expressHbs({extname:"handlebars", defaultLayout: "",layoutsDir: ""}));
-app.set('view engine', 'handlebars');
+//app.engine('handlebars', expressHbs({extname:"handlebars", defaultLayout: "main-layout",layoutsDir: "views/layouts/"}));
+//app.set('view engine', 'handlebars');
 //app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 const adminData = require('./routes/admin');
