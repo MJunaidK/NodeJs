@@ -14,7 +14,9 @@ router.get('/add-product', adminController.getAddProduct);
 // /admin/products => GET
 router.get('/products',adminController.getProducts);
 
-router.get('/edit-product/:productId', adminController.getEditProduct)
+router.get('/edit-product/:productId', adminController.getEditProduct);
+
+router.post('/edit-product', adminController.postEditProduct);
 
 /*router.get('/add-product',(req,res, next) => {
     console.log('In another middleware');
