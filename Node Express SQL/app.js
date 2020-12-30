@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const expressHbs= require('express-handlebars');
 
 const errorController = require('./controllers/error');
+const sequelize = require('./util/database');
 const db = require('./util/database');
 
 
@@ -48,4 +49,11 @@ app.use(errorController.get404);
     res.status(404).render('404', {pageTitle: 'Page Not found'});
 });*/
 
-app.listen(3000);
+sequelize.sync().then( result => {
+    //console.log(result);
+    app.listen(3000);
+})
+.catch( err => {
+  console.log(err);
+})
+

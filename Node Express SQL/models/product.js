@@ -1,4 +1,4 @@
-const Sequelize = require('seqelize'); // This is give backa  class hence we name constant with capital S
+const Sequelize = require('sequelize'); // This is give back a class hence we name constant with capital S
 
 const sequelize = require('../util/database');
 
