@@ -6,7 +6,11 @@ const expressHbs= require('express-handlebars');
 
 const errorController = require('./controllers/error');
 const sequelize = require('./util/database');
-const db = require('./util/database');
+//const db = require('./util/database');
+const Product = require('./models/product');
+const User = require('./models/user');
+
+
 
 
 const app = express();
@@ -20,6 +24,8 @@ app.set('views', 'views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE'});
+User.hasMany(Product);
 /*
 app.use((req,res, next) => {
     console.log('In the middleware');
@@ -49,7 +55,7 @@ app.use(errorController.get404);
     res.status(404).render('404', {pageTitle: 'Page Not found'});
 });*/
 
-sequelize.sync().then( result => {
+sequelize.sync({ force: true }).then( result => {
     //console.log(result);
     app.listen(3000);
 })
