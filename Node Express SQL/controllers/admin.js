@@ -60,7 +60,8 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/');
   }
   const prodId = req.params.productId;
-  Product.findAll({where: {id: prodId}})
+  req.user.getProducts({where: {id: prodId}})
+  //Product.findAll({where: {id: prodId}})
   .then(products => {
     if (!products) {
       return res.redirect('/');
@@ -133,7 +134,8 @@ exports.postEditProduct = (req, res, next) => {
 };*/
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  req.user.getProducts()
+  // Product.findAll()
   .then(products => {
     res.render('admin/products', {
       prods: products,
