@@ -22,11 +22,11 @@ exports.postAddProduct = (req, res, next) => {
     console.log(err)}
   );*/
 
-  Product.create({
+  req.user.createProduct({
     title: title,
     price: price,
     imageUrl: imageUrl,
-    description: description
+    description: description,
   })
   .then(result => {
     //console.log(result);
@@ -37,6 +37,22 @@ exports.postAddProduct = (req, res, next) => {
     console.log(err);
   });
  };
+  /*Product.create({
+    title: title,
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
+    userId: req.user[0].id
+  })
+  .then(result => {
+    //console.log(result);
+    console.log("Created Product!");
+    res.redirect('/admin/products');
+  })
+  .catch( err => {
+    console.log(err);
+  });
+ };*/
 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;

@@ -36,6 +36,13 @@ app.use((req,res, next) => {
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+    User.findAll({where: {id: 1}})
+    .then( users => {
+        req.user = users[0];
+        next();
+    })
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
@@ -55,8 +62,21 @@ app.use(errorController.get404);
     res.status(404).render('404', {pageTitle: 'Page Not found'});
 });*/
 
-sequelize.sync({ force: true }).then( result => {
+sequelize
+//.sync({ force: true })
+.sync()
+.then( result => {
+    return User.findAll({where: {id: 1}})
     //console.log(result);
+})
+.then( users => {
+    if(!users[0]){
+        return User.create({name: 'Junaid', email: 'test@test.com' })
+    }
+  return users[0];  
+})
+.then(user => {
+   // console.log(user);
     app.listen(3000);
 })
 .catch( err => {
