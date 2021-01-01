@@ -33,7 +33,7 @@ Cart.belongsToMany(Product, { through: CartItem});
 Product.belongsToMany(Cart, { through: CartItem});
 
 Order.belongsTo(User);
-//User.hasMany(Order);
+User.hasMany(Order);
 Order.belongsToMany(Product, {through: OrderItem});
 /*
 app.use((req,res, next) => {
