@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const { includes } = require('../util/path');
 //const Cart = require('../models/cart');
 //const Order = require('../models/order');
 
@@ -187,9 +188,11 @@ exports.postCartDeleteProduct = (req, res, next) => {
 
 
 exports.postOrder = (req, resp, next) => {
+  let fetchedCart;
   req.user
     .getCart()
     .then( cart => {
+      fetchedCart = cart;
           return cart.getProducts();
     })
     .then(products => {
@@ -205,21 +208,36 @@ exports.postOrder = (req, resp, next) => {
         })
     })
     .then( result => {
+      return fetchedCart.setProducts(null);
+  })
+    .then( result => {
       resp.redirect('/orders');
     })
     .catch(err => console.log(err))
 }
 
 exports.getOrders = (req, res, next) => {
+  req.user  
+    .getOrders({include:['products']})
+    .then(orders => {
+      res.render('shop/orders', {
+        path: '/orders',
+        pageTitle: 'Your Orders',
+        orders: orders
+      });
+    })
+}  
+
+/* exports.getOrders = (req, res, next) => {
   res.render('shop/orders', {
     path: '/orders',
     pageTitle: 'Your Orders'
   });
-};
+};*/
 
-exports.getCheckout = (req, res, next) => {
+/*exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
     path: '/checkout',
     pageTitle: 'Checkout'
   });
-};
+};*/
