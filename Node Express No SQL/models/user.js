@@ -17,7 +17,9 @@ class User{
 
     addToCart(product){
 
-     if(this.cart.items){
+     if(!this.cart.items){
+        this.cart.items = [];
+     }
             
         const cartProductIndex = this.cart.items.findIndex(cp => {
             return cp.productId.toString() === product._id.toString();
@@ -40,11 +42,14 @@ class User{
                 {_id: new ObjectId(this._id)},
                 { $set: {cart: updatedCart}}
             );    
-        }   
+          
     }
 
     getCart(){
         const db = getDb();
+        if(!this.cart.items){
+            return Promise.resolve([]);
+        }
         const productIds = this.cart.items.map( i => {
             return i.productId;
         })
