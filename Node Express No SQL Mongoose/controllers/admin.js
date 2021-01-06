@@ -86,16 +86,18 @@ exports.postEditProduct = (req, res, next) => {
   const updatedPrice = req.body.price;
   const updatedImageUrl = req.body.imageUrl;
   const updatedDesc = req.body.description;
-  const product = new Product(updatedTitle, updatedPrice, updatedDesc, updatedImageUrl, prodId);
-  product.save()
-   .then( result => {
-    console.log('UPDATED PRODUCT!');
-    res.redirect('/admin/products');
-  })
-  .catch( err => {
-    console.log(err);
-  })
-}  
+
+  Product.findById(prodId).then( product => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.description = updatedDesc;
+      product.imageUrl = updatedImageUrl;
+      return product.save()
+  }).then( result => {
+     console.log('UPDATED PRODUCT!');
+     res.redirect('/admin/products');
+   }).catch(err => console.log((err)));
+} 
 /*exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
@@ -114,7 +116,7 @@ exports.postEditProduct = (req, res, next) => {
 };*/
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
   // Product.findAll()
   .then(products => {
     res.render('admin/products', {
