@@ -123,7 +123,8 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
-  // Product.findAll()
+  //.select('title price -_id') 
+  //.populate('userId', 'name')
   .then(products => {
     res.render('admin/products', {
       prods: products,
