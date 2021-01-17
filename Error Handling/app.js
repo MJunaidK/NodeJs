@@ -40,6 +40,12 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated  = req.session? req.session.isLoggedIn : false;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 app.use(csrfProtection);
 app.use(flash());
 
@@ -56,15 +62,11 @@ app.use((req, res, next) => {
       next();
     })
     .catch(err => {
-      throw new Error(err);
+      next(new Error(err));
     });
 });
 
-app.use((req, res, next) => {
-  res.locals.isAuthenticated  = req.session? req.session.isLoggedIn : false;
-  res.locals.csrfToken = req.csrfToken();
-  next();
-});
+
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
