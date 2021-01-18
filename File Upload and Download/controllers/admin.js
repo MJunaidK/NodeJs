@@ -1,6 +1,8 @@
 const Product = require('../models/product');
 const { validationResult } =  require('express-validator/check');
 
+const fileHelper = require('../util/file');
+
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
@@ -79,6 +81,7 @@ exports.getEditProduct = (req, res, next) => {
   Product.findById(prodId)
     .then(product => {
       if (!product) {
+        fileHelper.deleteFile(Product.imageUrl);
         return res.redirect('/');
       }
       res.render('admin/edit-product', {
@@ -135,7 +138,11 @@ exports.postEditProduct = (req, res, next) => {
         res.redirect('/admin/products');
       })  
     })    
-    .catch(err => console.log(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
@@ -155,10 +162,21 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteOne({_id: prodId, userId: req.user._id})
+  Product.findById(prodId)
+    .then(product => {
+      if(!product){
+        throw new Error('No prodicy found!');
+      }
+      fileHelper.deleteFile(product.imageUrl);
+      return Product.deleteOne({_id: prodId, userId: req.user._id});
+    })  
     .then(() => {
       console.log('DESTROYED PRODUCT');
       res.redirect('/admin/products');
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
