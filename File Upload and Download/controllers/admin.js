@@ -50,11 +50,12 @@ exports.postAddProduct = (req, res, next) => {
   }
 
   const imageUrl = image.path;
-
+  
   const product = new Product({
     title: title,
     price: price,
     description: description,
+    imageUrl: imageUrl,
     userId: req.user
   });
   product
