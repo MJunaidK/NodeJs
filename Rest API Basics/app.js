@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const path = require('path');
 
 
 const feedRoutes = require('./routes/feed');
@@ -8,6 +10,7 @@ const app = express();
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded
 app.use(bodyParser.json()); // application/json
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,5 +20,23 @@ app.use((req, res, next) => {
 });
 
 app.use('/feed', feedRoutes);
+
+app.use((error, req, res, next) => {
+    console.log(error);
+    const status = error.statusCode || 500;
+    const message = error.message;
+    res.status(status).json({ message: message});
+});
+
+mongoose
+    .connect(
+        'mongodb+srv://:@cluster0.wxcwk.mongodb.net/messages?retryWrites=true&w=majority'
+    )
+    .then(result => {
+        app.listen(8081)
+    })
+    .catch(err => {
+        console.log(err)
+    });
 
 app.listen(8080);
