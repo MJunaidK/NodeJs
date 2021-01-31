@@ -24,13 +24,19 @@ exports.createPost = (req, res, next) => {
         error.status = 422;
         throw error;        
     }
+    if(!req.file){
+        const error = new Error('Validation failed, entered data is incorrect');
+        error.statusCode = 422;
+        throw error;
+    }
 
+    const imageUrl = req.file.path.replace("\\", "/");
     const title = req.body.title;
     const content = req.body.content;
     const post = new Post({
         title: title,
         content: content,
-        imageUrl: 'images/drinks.png',
+        imageUrl: imageUrl,
         creator: { name: 'Mohammad Junaid Khan'}
     });
     post.save().then(result => {
