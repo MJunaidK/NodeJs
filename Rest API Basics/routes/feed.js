@@ -1,12 +1,12 @@
 const express = require('express');
 const { body } = require('express-validator/check');
 
-const feeedController = require('../controllers/feed');
+const feedController = require('../controllers/feed');
 
 const router = express.Router();
 
 // GET /feeds/posts
-router.get('/posts', feeedController.getPosts);
+router.get('/posts', feedController.getPosts);
 
 // POST /feeds/post
 router.post('/post', [
@@ -17,7 +17,7 @@ router.post('/post', [
     body('content')
         .trim()
         .isLength({min: 5}),
-], feeedController.createPost);
+], feedController.createPost);
 
 router.put('/post/:postId',
 [
@@ -28,7 +28,9 @@ router.put('/post/:postId',
         .trim()
         .isLength({min: 5}),
 ],
-    feeedController.updatePost
+    feedController.updatePost
 );
+
+router.delete('/post/:postId', feedController.deletePost);
 
 module.exports = router;
