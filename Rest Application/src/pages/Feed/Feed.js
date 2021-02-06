@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+
 import Post from '../../components/Feed/Post/Post';
 import Button from '../../components/Button/Button';
 import FeedEdit from '../../components/Feed/FeedEdit/FeedEdit';
@@ -37,7 +38,7 @@ class Feed extends Component {
       })
       .catch(this.catchError);
 
-    this.loadPosts();    
+    this.loadPosts();
   }
 
   loadPosts = direction => {
@@ -133,41 +134,51 @@ class Feed extends Component {
 
     let graphqlQuery = {
       query: `
-          mutation {
-            createUser(postInput: {title: "${postData.title}", content:"${postData.content}",image: "Some url"}) {
-              _id
-              title
+        mutation {
+          createPost(postInput: {title: "${postData.title}", content: "${
+        postData.content
+      }", imageUrl: "some url"}) {
+            _id
+            title
+            content
+            imageUrl
+            creator {
+              name
             }
-          }`
+            createdAt
+          }
+        }
+      `
     };
-  
+
     fetch('http://localhost:8080/graphql', {
       method: 'POST',
       body: JSON.stringify(graphqlQuery),
       headers: {
         Authorization: 'Bearer ' + this.props.token,
-        'Content-type': 'application/json'
+        'Content-Type': 'application/json'
       }
     })
       .then(res => {
-         return res.json();
+        return res.json();
       })
       .then(resData => {
-        console.log(resData);
         if (resData.errors && resData.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"
           );
         }
         if (resData.errors) {
-          throw new Error('User creation failed!');
+          throw new Error('User login failed!');
         }
-        const post = ({
-          title: postInput.title,
-          content: resData.post.content,
-          creator: resData.post.creator,
-          createdAt: resData.post.createdAt
-        });
+        console.log(resData);
+        const post = {
+          _id: resData.data.createPost._id,
+          title: resData.data.createPost.title,
+          content: resData.data.createPost.content,
+          creator: resData.data.createPost.creator,
+          createdAt: resData.data.createPost.createdAt
+        };
         this.setState(prevState => {
           return {
             isEditing: false,

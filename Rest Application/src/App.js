@@ -59,15 +59,15 @@ class App extends Component {
   loginHandler = (event, authData) => {
     event.preventDefault();
     const graphqlQuery = {
-        query: `
+      query: `
         {
-          login(email: "${authData.email}", password: "${authData.password}"){
+          login(email: "${authData.email}", password: "${authData.password}") {
             token
             userId
           }
-        }`
-      };
-    
+        }
+      `
+    };
     this.setState({ authLoading: true });
     fetch('http://localhost:8080/graphql', {
       method: 'POST',
@@ -75,9 +75,9 @@ class App extends Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(graphqlQuery)
-      })
+    })
       .then(res => {
-       return res.json();
+        return res.json();
       })
       .then(resData => {
         if (resData.errors && resData.errors[0].status === 422) {
@@ -86,7 +86,7 @@ class App extends Component {
           );
         }
         if (resData.errors) {
-          throw new Error('User creation failed!');
+          throw new Error('User login failed!');
         }
         console.log(resData);
         this.setState({
