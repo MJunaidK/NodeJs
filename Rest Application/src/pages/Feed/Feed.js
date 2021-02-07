@@ -62,7 +62,6 @@ class Feed extends Component {
               _id
               title
               content
-              imageUrl
               creator {
                 name
               }
